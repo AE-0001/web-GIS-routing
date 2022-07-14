@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerala Cyclone Maps</title>
+    
+    <!--leaflet css-->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+    
+    <!--leaflet css for routing-->   
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+      
+    <style>
+        
+        #navigation {
+                height:500px;
+                width:100%;
+                line-height: 70px;
+                float: left;
+                padding: 5px;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                
+                color:white;
+                background-color: #581845;
+                font-size: larger;
+                font-weight: bold;
+                background-attachment:scroll;
+                
+
+
+        }
+        .logo{
+            background-color: #581845;
+            color: white;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .logo span{
+            color: lightpink;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        
+       
+        #map {
+            width: 100%;
+            height: 500px;
+           
+
+        }
+        .section{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .section span{
+            color: lightpink;
+            background-color: #581845;
+        }
+    </style>
+
+</head>
+<body>
+    <h2 class="logo">Universal Map<span>services.</span></h2>
+    <!-- <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin="">
+    </script> -->
+    
+    <!-- <div id="navigation"> 
+        <input type="button" value="Home"><br>
+        <input type="button" value="Inland ind_water_areas_dcw"><br>
+        <input type="button" value="Grasslands"><br>
+    </div> -->
+    <div class="section">
+        <marquee>Universal Map<span>services.</span></marquee>
+</div>
+<div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin="">
+    </script>
+<div id="navigation">Storms of Kerala
+  <!-- <img src="img/tornado.jpg"><br> -->
+   
+<br>
+<button onclick="mycoolfunction1()">Amphan Hits</button><br>
+<button onclick="mycoolfunction2()">Kyarr Hits</button><br>
+<button onclick="mycoolfunction3()">Nipah outbreak</button><br>
+<button onclick="mycoolfunction4()">2020 floods</button><br>
+
+</div>    
+    </script>
+    
+
+
+
+</body>
+</html>
+<!---leaflet js for routing machine-->
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.6.0.js"></script> 
+<script>
+
+    
+
+function mycoolfunction1() {
+    var map = L.map('map').setView([23.11004929342803, 78.57421865421284],10); //10-zoom level
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map); // basic code
+
+// Creating latlng object
+         var latlngs = [
+            [9.605319294300557, 76.51934188439685],
+            [9.750316504427545, 76.39589353889848],
+            [8.674284730932433, 76.91173497008889]
+         ];
+         // Creating a polygon
+         var polygon = L.polygon(latlngs, {color: 'red'});
+         
+         // Adding to polygon to map
+         polygon.addTo(map);
+
+
+
+
+
+
+
+
+
+// var baseLayers={
+//     "Streets":osm
+// };
+
+// var control=new L.control.layers(baseLayers).addTo(map);
+
+var wms_layer=L.tileLayer.wms("http://localhost:8080/geoserver/WS_Test/wms", {
+    layers: 'WS_Test:ind_adm2',
+    format: 'image/png',
+    transparent: true,
+
+    // version: '1.1.0', 
+    attribution: "states"
+}).addTo(map); //calling wms layer from geoserver
+
+    var marker=L.marker([9.605319294300557, 76.51934188439685]).addTo(map);//location marker
+    marker.bindPopup("Start POint: KOttayam").openPopup();
+//on click marker appears
+//**
+ map.on('click', function (e) {
+     console.log(e)
+      var secondMarker=L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+    //  L.Routing.control({
+    //     waypoints: [
+    //         // L.latLng(13.088994912837238, 80.27527304105662),
+    //         L.latLng(e.latlng.lat, e.latlng.lng)
+    //     ]
+    // }).on('routesfound', function (e) {
+    //     console.log(e)
+    //     e.routes[0].coordinates.forEach(function (coord, index) {
+    //         setTimeout(() => {
+    //             marker.setLatLng([coord.lat, coord.lng])
+    //         }, 100 * index);
+    //     })
+    // })
+    //     .addTo(map); 
+
+
+}) 
+
+
+var popup = L.popup()
+    .setLatLng([5.897648141119966, 80.21398108150491])
+    .setContent("Origin: 300KMs east of Colombo, Lacadive Sea")
+    .openOn(map);
+
+ 
+    L.Routing.control({
+  waypoints: [
+    L.latLng(9.605319294300557, 76.51934188439685), 
+    L.latLng(9.750316504427545, 76.39589353889848),
+    L.latLng(8.674284730932433, 76.91173497008889)
+  ]
+}).on('routes found', function(e) {
+    console.log(e)
+    e.routes[0].coordinates.forEach(function (coord, index) {
+        setTimeout(() => {
+            marker.setLatLng([coord.lat, coord.lng])
+        }, 100*index);
+    })
+    })
+.addTo(map); 
+     
+}
+
+function mycoolfunction2() {
+
+    var map = L.map('map').setView([23.11004929342803, 78.57421865421284],10); //10-zoom level
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map); // basic code
+
+// Creating latlng object
+         var latlngs = [
+         [8.633395967704283, 76.95038574579816], 
+         [8.891844877718334, 76.6105192957736],
+         [9.293428357880185, 76.78736551450923],
+         [9.632138944667467, 76.31726283108358],
+         [9.61401815446552, 76.52306024727878],
+         [10.044553874511651, 76.88292144488712],
+         [10.526135575251944, 76.20366080943937],
+         [10.81331264416174, 76.65506067465175], 
+         [11.082116162492317, 76.06364952350457],  //redo 
+         [11.268597006143557, 75.76067455373015],
+         [11.737879652397151, 76.09118628132305]
+         ];
+         // Creating a polygon
+         var polygon = L.polygon(latlngs, {color: 'red'});
+         
+         // Adding to polygon to map
+         polygon.addTo(map);
+
+
+
+
+
+var taxiIcon=L.icon({
+    iconUrl: 'img/taxi.jpg',
+    iconSize: [70, 70]
+})
+
+
+// var baseLayers={
+//     "Streets":osm
+// };
+
+// var control=new L.control.layers(baseLayers).addTo(map);
+
+var wms_layer=L.tileLayer.wms("http://localhost:8080/geoserver/WS_Test/wms", {
+    layers: 'WS_Test:ind_adm2',
+    format: 'image/png',
+    transparent: true,
+
+    // version: '1.1.0', 
+    attribution: "states"
+}).addTo(map); //calling wms layer from geoserver
+
+    var marker=L.marker([23.11004929342803, 78.57421865421284], {icon: taxiIcon}).addTo(map);//location marker
+//on click marker appears
+//**
+ map.on('click', function (e) {
+     console.log(e)
+      var secondMarker=L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+    //  L.Routing.control({
+    //     waypoints: [
+    //         // L.latLng(13.088994912837238, 80.27527304105662),
+    //         L.latLng(e.latlng.lat, e.latlng.lng)
+    //     ]
+    // }).on('routesfound', function (e) {
+    //     console.log(e)
+    //     e.routes[0].coordinates.forEach(function (coord, index) {
+    //         setTimeout(() => {
+    //             marker.setLatLng([coord.lat, coord.lng])
+    //         }, 100 * index);
+    //     })
+    // })
+    //     .addTo(map); 
+
+
+}) 
+
+
+ 
+    L.Routing.control({
+  waypoints: [
+    L.latLng(8.633395967704283, 76.95038574579816), 
+    L.latLng(8.891844877718334, 76.6105192957736),
+    L.latLng(9.293428357880185, 76.78736551450923),
+    L.latLng(9.632138944667467, 76.31726283108358),
+    L.latLng(9.61401815446552, 76.52306024727878),   //10.791218414766476, 78.71477364979316
+    L.latLng(10.044553874511651, 76.88292144488712),
+    L.latLng(10.526135575251944, 76.20366080943937),
+    L.latLng(10.81331264416174, 76.65506067465175), //cdlr n tri
+    L.latLng(10.79492811868723, 78.69726415699972),
+    L.latLng(11.082116162492317, 76.06364952350457),
+    L.latLng(11.737879652397151, 76.09118628132305)    
+  ]
+}).on('routes found', function(e) {
+    console.log(e)
+    e.routes[0].coordinates.forEach(function (coord, index) {
+        setTimeout(() => {
+            marker.setLatLng([coord.lat, coord.lng])
+        }, 100*index);
+    })
+    })
+.addTo(map); 
+     
+}
+
+
+function mycoolfunction3() {
+    var map = L.map('map').setView([23.11004929342803, 78.57421865421284],10); //10-zoom level
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map); // basic code
+
+// Creating latlng object
+         var latlngs = [
+            [11.588166992695317, 75.7511462347229],
+            [11.0844917055716, 76.06781114822118],
+            [10.212096561249453, 76.29852249468347]
+            
+         ];
+         // Creating a polygon
+         var polygon = L.polygon(latlngs, {color: 'red'});
+         
+         // Adding to polygon to map
+         polygon.addTo(map);
+
+
+
+
+
+var taxiIcon=L.icon({
+    iconUrl: 'img/taxi.jpg',
+    iconSize: [70, 70]
+})
+
+
+// var baseLayers={
+//     "Streets":osm
+// };
+
+// var control=new L.control.layers(baseLayers).addTo(map);
+
+var wms_layer=L.tileLayer.wms("http://localhost:8080/geoserver/WS_Test/wms", {
+    layers: 'WS_Test:ind_adm2',
+    format: 'image/png',
+    transparent: true,
+
+    // version: '1.1.0', 
+    attribution: "states"
+}).addTo(map); //calling wms layer from geoserver
+
+    var marker=L.marker([23.11004929342803, 78.57421865421284], {icon: taxiIcon}).addTo(map);//location marker
+//on click marker appears
+//**
+ map.on('click', function (e) {
+     console.log(e)
+      var secondMarker=L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+    //  L.Routing.control({
+    //     waypoints: [
+    //         // L.latLng(13.088994912837238, 80.27527304105662),
+    //         L.latLng(e.latlng.lat, e.latlng.lng)
+    //     ]
+    // }).on('routesfound', function (e) {
+    //     console.log(e)
+    //     e.routes[0].coordinates.forEach(function (coord, index) {
+    //         setTimeout(() => {
+    //             marker.setLatLng([coord.lat, coord.lng])
+    //         }, 100 * index);
+    //     })
+    // })
+    //     .addTo(map); 
+
+
+}) 
+
+
+ 
+    L.Routing.control({
+  waypoints: [
+    L.latLng(11.588166992695317, 75.7511462347229), 
+    L.latLng(11.0844917055716, 76.06781114822118),
+    L.latLng(10.212096561249453, 76.29852249468347)
+  ]
+}).on('routes found', function(e) {
+    console.log(e)
+    e.routes[0].coordinates.forEach(function (coord, index) {
+        setTimeout(() => {
+            marker.setLatLng([coord.lat, coord.lng])
+        }, 100*index);
+    })
+    })
+.addTo(map); 
+     
+}
+
+function mycoolfunction4(){
+    var map = L.map('map').setView([23.11004929342803, 78.57421865421284],10); //10-zoom level
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map); // basic code
+
+// Creating latlng object
+         var latlngs = [
+            [11.6854, 76.1320],
+            [11.08831417525024, 76.06982902102503],
+            [10.520496573037049, 76.20461162432979],
+            [9.95244688038748, 76.9280951533278],
+            [9.610817641384282, 76.52217168498039]
+         ];
+         // Creating a polygon
+         var polygon = L.polygon(latlngs, {color: 'red'});
+         
+         // Adding to polygon to map
+         polygon.addTo(map);
+
+
+
+
+
+
+// var baseLayers={
+//     "Streets":osm
+// };
+
+// var control=new L.control.layers(baseLayers).addTo(map);
+
+var wms_layer=L.tileLayer.wms("http://localhost:8080/geoserver/WS_Test/wms", {
+    layers: 'WS_Test:ind_adm2',
+    format: 'image/png',
+    transparent: true,
+
+    // version: '1.1.0', 
+    attribution: "states"
+}).addTo(map); //calling wms layer from geoserver
+
+    var marker=L.marker([23.11004929342803, 78.57421865421284]).addTo(map);//location marker
+//on click marker appears
+//**
+ map.on('click', function (e) {
+     console.log(e)
+      var secondMarker=L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+    //  L.Routing.control({
+    //     waypoints: [
+    //         // L.latLng(13.088994912837238, 80.27527304105662),
+    //         L.latLng(e.latlng.lat, e.latlng.lng)
+    //     ]
+    // }).on('routesfound', function (e) {
+    //     console.log(e)
+    //     e.routes[0].coordinates.forEach(function (coord, index) {
+    //         setTimeout(() => {
+    //             marker.setLatLng([coord.lat, coord.lng])
+    //         }, 100 * index);
+    //     })
+    // })
+    //     .addTo(map); 
+
+
+}) 
+
+
+ 
+    L.Routing.control({
+  waypoints: [
+    L.latLng(11.6854, 76.1320),  
+    L.latLng(11.08831417525024, 76.06982902102503),
+    L.latLng(10.520496573037049, 76.20461162432979),
+    L.latLng(9.95244688038748, 76.9280951533278),
+    L.latLng(9.610817641384282, 76.52217168498039)
+  ]
+}).on('routes found', function(e) {
+    console.log(e)
+    e.routes[0].coordinates.forEach(function (coord, index) {
+        setTimeout(() => {
+            marker.setLatLng([coord.lat, coord.lng])
+        }, 100*index);
+    })
+    })
+.addTo(map); 
+     
+}
+
+  
+</script>
